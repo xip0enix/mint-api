@@ -17,7 +17,8 @@ The server will listen on port 7000, or the port specified in the `PORT` environ
 The API endpoint `/api/veranstaltungen` returns a list of upcoming MINT-EC events. The response is in JSON format and contains the following fields:
 
 - `title` (string): The name of the event.
-- `eventDate` (string): The date of the event.
+- `eventRange` (string): The date range of the event.
+- `eventMonth` (string): The month of the event.
 - `eventAccommodation` (string): The location of the event.
 - `url` (string): The URL to the event page on the MINT-EC website.
 
