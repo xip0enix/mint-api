@@ -4,8 +4,12 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 const cache = require("memory-cache");
 const cron = require("node-cron");
+const cors = require("cors");
 
 const app = express();
+
+// Hier fügen Sie das CORS-Modul als Middleware hinzu.
+app.use(cors());
 
 app.get("/", (req, res) => {
   res.json("Welcome to my MINT-EC API");
