@@ -68,13 +68,15 @@ cron.schedule("0 * * * *", async () => {
         .find(".event-accommodation")
         .text();
       const eventName = $(this).find(".event-name").text();
-      const eventDate =
-        $(this).find(".date-range").text() + $(this).find(".month").text();
+      const eventRange =
+        $(this).find(".date-range").text();
+      const eventMonth = $(this).find(".month").text();
       const url = $(this).attr("href");
 
       return {
         title: eventName,
-        eventDate,
+        eventRange,
+        eventMonth,
         eventAccommodation,
         url,
       };
