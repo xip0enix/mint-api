@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": ">=16.0.0"
+  },
   "scripts": {
     "start": "nodemon index.js"
   },
@@ -19,5 +22,5 @@
     "node-cache": "^5.1.2",
     "node-cron": "^3.0.2",
     "nodemon": "^2.0.22"
-  }
+  } 
 }
