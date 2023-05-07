@@ -7,6 +7,7 @@ const cors = require("cors");
 const NodeCache = require("node-cache");
 const helmet = require('helmet');
 const rateLimit = require("express-rate-limit");
+const compression = require('compression');
 
 const app = express();
 
@@ -20,6 +21,9 @@ app.use(limiter);
 
 // Add CORS middleware
 app.use(cors());
+
+// Enable compression middleware
+app.use(compression());
 
 // Add Helmet middleware
 app.use(helmet());
