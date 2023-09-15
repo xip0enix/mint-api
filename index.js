@@ -66,7 +66,7 @@ app.get("/api/veranstaltungen", async (req, res) => {
 
     res.json(articles);
   } catch (error) {
-    console.error(error);
+    console.error("Error in /api/veranstaltungen:");
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
@@ -83,7 +83,7 @@ cron.schedule("0 * * * *", async () => {
     // Cache the response data with expiration time
     cache.set("veranstaltungen", articles);
   } catch (error) {
-    console.error(error);
+    console.error("Error in cron job:");
   }
 });
 
@@ -92,10 +92,11 @@ function extractEventData($) {
   const articles = $(".event-group a").map(function () {
     const eventAccommodation = $(this)
       .find(".event-accommodation")
-      .text();
-    const eventName = $(this).find(".event-name").text();
-    const eventRange = $(this).find(".date-range").text();
-    const eventMonth = $(this).find(".month").text();
+      .text()
+      .trim();
+    const eventName = $(this).find(".event-name").text().trim();
+    const eventRange = $(this).find(".date-range").text().trim();
+    const eventMonth = $(this).find(".month").text().trim();
     const url = $(this).attr("href");
 
     return {
@@ -121,4 +122,3 @@ app.post("/api/clear-cache", (req, res) => {
 
 // Start the server
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
