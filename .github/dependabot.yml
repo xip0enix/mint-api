@@ -5,30 +5,30 @@ updates:
     schedule:
       interval: "weekly"
     allow:
-      - dependency-type: "direct"
-        dependency-name: "axios"
-        versions: ["^1.x.x"]
-      - dependency-type: "direct"
-        dependency-name: "cheerio"
-        versions: ["^1.x.x"]
-      - dependency-type: "direct"
-        dependency-name: "compression"
-        versions: ["^1.x.x"]
-      - dependency-type: "direct"
-        dependency-name: "cors"
-        versions: ["^2.x.x"]
-      - dependency-type: "direct"
-        dependency-name: "express"
-        versions: ["^4.x.x"]
-      - dependency-type: "direct"
-        dependency-name: "express-rate-limit"
-        versions: ["^7.x.x"]
-      - dependency-type: "direct"
-        dependency-name: "helmet"
-        versions: ["^7.x.x"]
-      - dependency-type: "direct"
-        dependency-name: "node-cache"
-        versions: ["^5.x.x"]
-      - dependency-type: "direct"
-        dependency-name: "node-cron"
-        versions: ["^3.x.x"]
+      - dependency-name: "axios"
+        update-schedule: "weekly"
+        versioning-strategy: "widen"
+      - dependency-name: "cheerio"
+        update-schedule: "weekly"
+        versioning-strategy: "widen"
+      - dependency-name: "compression"
+        update-schedule: "weekly"
+        versioning-strategy: "widen"
+      - dependency-name: "cors"
+        update-schedule: "weekly"
+        versioning-strategy: "widen"
+      - dependency-name: "express"
+        update-schedule: "weekly"
+        versioning-strategy: "widen"
+      - dependency-name: "express-rate-limit"
+        update-schedule: "weekly"
+        versioning-strategy: "widen"
+      - dependency-name: "helmet"
+        update-schedule: "weekly"
+        versioning-strategy: "widen"
+      - dependency-name: "node-cache"
+        update-schedule: "weekly"
+        versioning-strategy: "widen"
+      - dependency-name: "node-cron"
+        update-schedule: "weekly"
+        versioning-strategy: "widen"
