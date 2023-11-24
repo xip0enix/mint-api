@@ -1,0 +1,42 @@
+# To get started with Dependabot version updates, you'll need to specify which
+# package ecosystems to update and where the package manifests are located.
+# Please see the documentation for all configuration options:
+# https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
+
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    ignore:
+      - dependency-name: "nodemon" # Excluding nodemon from automatic updates
+        versions: ["^3.0.1"]
+    allow:
+      - dependency-type: "direct"
+        dependency-name: "axios"
+        versions: ["^1.6.0"]
+      - dependency-type: "direct"
+        dependency-name: "cheerio"
+        versions: ["^1.0.0-rc.12"]
+      - dependency-type: "direct"
+        dependency-name: "compression"
+        versions: ["^1.7.4"]
+      - dependency-type: "direct"
+        dependency-name: "cors"
+        versions: ["^2.8.5"]
+      - dependency-type: "direct"
+        dependency-name: "express"
+        versions: ["^4.18.2"]
+      - dependency-type: "direct"
+        dependency-name: "express-rate-limit"
+        versions: ["^7.0.0"]
+      - dependency-type: "direct"
+        dependency-name: "helmet"
+        versions: ["^7.0.0"]
+      - dependency-type: "direct"
+        dependency-name: "node-cache"
+        versions: ["^5.1.2"]
+      - dependency-type: "direct"
+        dependency-name: "node-cron"
+        versions: ["^3.0.2"]
