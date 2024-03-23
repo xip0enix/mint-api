@@ -1,4 +1,3 @@
-const PORT = process.env.PORT || 7000;
 const express = require("express");
 const axios = require("axios");
 const cheerio = require("cheerio");
@@ -11,16 +10,22 @@ const compression = require('compression');
 
 const app = express();
 
-// Set up rate limiter (maximum 100 requests per hour per IP address)
+// Set up rate limiter (configurable via environment variables)
+const rateLimitWindowMs = process.env.RATE_LIMIT_WINDOW_MS || 60 * 60 * 1000; // 1 hour default
+const rateLimitMax = process.env.RATE_LIMIT_MAX || 100; // 100 requests default
 const limiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 hour
-  max: 100,
+  windowMs: rateLimitWindowMs,
+  max: rateLimitMax,
   message: "Too many requests from this IP address, please try again later"
 });
 app.use(limiter);
 
-// Add CORS middleware
-app.use(cors());
+// Enable CORS with configurable origins (defaults to all)
+const allowedOrigins = process.env.CORS_ORIGINS || '*';
+const corsOptions = {
+  origin: allowedOrigins,
+};
+app.use(cors(corsOptions));
 
 // Enable compression middleware
 app.use(compression());
@@ -28,11 +33,11 @@ app.use(compression());
 // Add Helmet middleware
 app.use(helmet());
 
-// Set cache expiration time to 1 hour (in seconds)
-const CACHE_EXPIRATION_TIME = 3600;
+// Set cache expiration time (configurable via environment variables)
+const cacheExpirationTime = process.env.CACHE_EXPIRATION_TIME || 3600; // 1 hour default
 
 // Create a cache object with a TTL value for each entry
-const cache = new NodeCache({ stdTTL: CACHE_EXPIRATION_TIME });
+const cache = new NodeCache({ stdTTL: cacheExpirationTime });
 
 // Welcome page
 app.get("/", (req, res) => {
@@ -40,33 +45,35 @@ app.get("/", (req, res) => {
 });
 
 // Endpoint for getting event data
-app.get("/api/veranstaltungen", async (req, res) => {
+async function getEventData() {
+  const cacheKey = "veranstaltungen";
+  const cachedData = cache.get(cacheKey);
+
+  if (cachedData) {
+    return cachedData;
+  }
+
   try {
-    const cacheKey = "veranstaltungen";
-    const cachedData = cache.get(cacheKey);
-
-    if (cachedData) {
-      // If cached data exists, return it
-      return res.json(cachedData);
-    }
-
-    // If cached data does not exist, fetch data from website
     const response = await axios.get(
       "https://www.mint-ec.de/angebote/veranstaltungen/kommende-veranstaltungen/"
     );
 
-    // Parse HTML with cheerio
     const $ = cheerio.load(response.data);
-
-    // Extract event data
     const articles = extractEventData($);
 
-    // Cache the response data with expiration time
     cache.set(cacheKey, articles);
+    return articles;
+  } catch (error) {
+    console.error("Error fetching event data:", error);
+    throw error; // Re-throw for proper error handling
+  }
+}
 
+app.get("/api/veranstaltungen", async (req, res) => {
+  try {
+    const articles = await getEventData();
     res.json(articles);
   } catch (error) {
-    console.error("Error in /api/veranstaltungen:");
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
@@ -74,16 +81,9 @@ app.get("/api/veranstaltungen", async (req, res) => {
 // Schedule the task to run every hour
 cron.schedule("0 * * * *", async () => {
   try {
-    const response = await axios.get(
-      "https://www.mint-ec.de/angebote/veranstaltungen/kommende-veranstaltungen/"
-    );
-    const $ = cheerio.load(response.data);
-    const articles = extractEventData($);
-
-    // Cache the response data with expiration time
-    cache.set("veranstaltungen", articles);
+    await getEventData();
   } catch (error) {
-    console.error("Error in cron job:");
+    console.error("Error in cron job:", error);
   }
 });
 
@@ -121,4 +121,6 @@ app.post("/api/clear-cache", (req, res) => {
 });
 
 // Start the server
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const port = process.env.PORT || 7000;
+app.listen(port, () => console.log(`Server running on port ${port}`));
+
