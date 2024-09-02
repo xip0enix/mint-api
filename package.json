@@ -12,7 +12,7 @@
   "author": "xip0enix",
   "license": "ISC",
   "dependencies": {
-    "axios": "^1.7.5",
+    "axios": "^1.7.7",
     "cheerio": "^1.0.0",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
